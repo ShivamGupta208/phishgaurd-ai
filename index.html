@@ -1,0 +1,89 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh17000\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>PhishGuard Labs | AI Phishing Detection</title>\
+    <script src="https://cdn.tailwindcss.com"></script>\
+</head>\
+<body class="bg-gray-50 font-sans text-gray-900">\
+    <div class="max-auto max-w-2xl px-4 py-12">\
+        <div class="text-center mb-8">\
+            <h1 class="text-3xl font-bold text-blue-800">\uc0\u55357 \u56592  PhishGuard Labs</h1>\
+            <p class="text-gray-600 mt-2">Privacy-First AI Phishing Detection Tool</p>\
+        </div>\
+\
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">\
+            <label class="block text-sm font-medium text-gray-700 mb-2">Paste suspicious Email, SMS, or Link:</label>\
+            <textarea id="userInput" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text here..."></textarea>\
+            <button onclick="analyzeText()" id="scanBtn" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-all">\
+                Scan with Google Gemini AI\
+            </button>\
+        </div>\
+\
+        <div id="resultArea" class="mt-8 hidden p-6 rounded-xl border">\
+            <h2 id="riskLevel" class="text-xl font-bold mb-2"></h2>\
+            <p id="explanation" class="text-gray-700 leading-relaxed"></p>\
+        </div>\
+    </div>\
+\
+    <script type="module">\
+        import \{ GoogleGenerativeAI \} from "https://esm.run/@google/generative-ai";\
+\
+        // REPLACE THE TEXT BELOW WITH YOUR ACTUAL API KEY\
+        const API_KEY = "YOUR_API_KEY_HERE";\
+        const genAI = new GoogleGenerativeAI(API_KEY);\
+\
+        window.analyzeText = async () => \{\
+            const input = document.getElementById('userInput').value;\
+            const btn = document.getElementById('scanBtn');\
+            const resultArea = document.getElementById('resultArea');\
+            \
+            if (!input) return alert("Please paste something to scan!");\
+\
+            btn.innerText = "Analyzing...";\
+            btn.disabled = true;\
+\
+            try \{\
+                const model = genAI.getGenerativeModel(\{ model: "gemini-1.5-flash" \});\
+                \
+                const prompt = `You are a cybersecurity expert. Analyze the following text for phishing or scam indicators. \
+                Return your response in this exact format:\
+                RISK: [Low/Medium/High]\
+                EXPLANATION: [Briefly list red flags like urgency, suspicious links, or unusual requests]\
+                \
+                Text to analyze: "$\{input\}"`;\
+\
+                const result = await model.generateContent(prompt);\
+                const response = await result.response;\
+                const text = response.text();\
+\
+                // Simple parsing for display\
+                const risk = text.includes("High") ? "High" : text.includes("Medium") ? "Medium" : "Low";\
+                const color = risk === "High" ? "bg-red-100 border-red-500 text-red-800" : \
+                              risk === "Medium" ? "bg-yellow-100 border-yellow-500 text-yellow-800" : \
+                              "bg-green-100 border-green-500 text-green-800";\
+\
+                resultArea.className = `mt-8 p-6 rounded-xl border $\{color\}`;\
+                document.getElementById('riskLevel').innerText = `Risk Level: $\{risk\}`;\
+                document.getElementById('explanation').innerText = text.split("EXPLANATION:")[1] || text;\
+                resultArea.classList.remove('hidden');\
+\
+            \} catch (error) \{\
+                console.error(error);\
+                alert("Error connecting to Gemini. Check your API Key!");\
+            \} finally \{\
+                btn.innerText = "Scan with Google Gemini AI";\
+                btn.disabled = false;\
+            \}\
+        \};\
+    </script>\
+</body>\
+</html>}
