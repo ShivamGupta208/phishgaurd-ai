@@ -1,89 +1,119 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2867
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh17000\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard Labs | AI Phishing Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+    <div class="mx-auto max-w-2xl px-4 py-12">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-800">🔐 PhishGuard Labs</h1>
+            <p class="text-gray-600 mt-2">Privacy-First AI Phishing Detection Tool</p>
+            <p class="text-xs text-gray-400 mt-1">Built for GDG BPIT TechSprint 2026</p>
+        </div>
 
-\f0\fs24 \cf0 <!DOCTYPE html>\
-<html lang="en">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>PhishGuard Labs | AI Phishing Detection</title>\
-    <script src="https://cdn.tailwindcss.com"></script>\
-</head>\
-<body class="bg-gray-50 font-sans text-gray-900">\
-    <div class="max-auto max-w-2xl px-4 py-12">\
-        <div class="text-center mb-8">\
-            <h1 class="text-3xl font-bold text-blue-800">\uc0\u55357 \u56592  PhishGuard Labs</h1>\
-            <p class="text-gray-600 mt-2">Privacy-First AI Phishing Detection Tool</p>\
-        </div>\
-\
-        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">\
-            <label class="block text-sm font-medium text-gray-700 mb-2">Paste suspicious Email, SMS, or Link:</label>\
-            <textarea id="userInput" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text here..."></textarea>\
-            <button onclick="analyzeText()" id="scanBtn" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-all">\
-                Scan with Google Gemini AI\
-            </button>\
-        </div>\
-\
-        <div id="resultArea" class="mt-8 hidden p-6 rounded-xl border">\
-            <h2 id="riskLevel" class="text-xl font-bold mb-2"></h2>\
-            <p id="explanation" class="text-gray-700 leading-relaxed"></p>\
-        </div>\
-    </div>\
-\
-    <script type="module">\
-        import \{ GoogleGenerativeAI \} from "https://esm.run/@google/generative-ai";\
-\
-        // REPLACE THE TEXT BELOW WITH YOUR ACTUAL API KEY\
-        const API_KEY = "AIzaSyBvyDkawGmY0GSsG2AE4DaY59VSWNEbwvw";\
-        const genAI = new GoogleGenerativeAI(API_KEY);\
-\
-        window.analyzeText = async () => \{\
-            const input = document.getElementById('userInput').value;\
-            const btn = document.getElementById('scanBtn');\
-            const resultArea = document.getElementById('resultArea');\
-            \
-            if (!input) return alert("Please paste something to scan!");\
-\
-            btn.innerText = "Analyzing...";\
-            btn.disabled = true;\
-\
-            try \{\
-                const model = genAI.getGenerativeModel(\{ model: "gemini-1.5-flash" \});\
-                \
-                const prompt = `You are a cybersecurity expert. Analyze the following text for phishing or scam indicators. \
-                Return your response in this exact format:\
-                RISK: [Low/Medium/High]\
-                EXPLANATION: [Briefly list red flags like urgency, suspicious links, or unusual requests]\
-                \
-                Text to analyze: "$\{input\}"`;\
-\
-                const result = await model.generateContent(prompt);\
-                const response = await result.response;\
-                const text = response.text();\
-\
-                // Simple parsing for display\
-                const risk = text.includes("High") ? "High" : text.includes("Medium") ? "Medium" : "Low";\
-                const color = risk === "High" ? "bg-red-100 border-red-500 text-red-800" : \
-                              risk === "Medium" ? "bg-yellow-100 border-yellow-500 text-yellow-800" : \
-                              "bg-green-100 border-green-500 text-green-800";\
-\
-                resultArea.className = `mt-8 p-6 rounded-xl border $\{color\}`;\
-                document.getElementById('riskLevel').innerText = `Risk Level: $\{risk\}`;\
-                document.getElementById('explanation').innerText = text.split("EXPLANATION:")[1] || text;\
-                resultArea.classList.remove('hidden');\
-\
-            \} catch (error) \{\
-                console.error(error);\
-                alert("Error connecting to Gemini. Check your API Key!");\
-            \} finally \{\
-                btn.innerText = "Scan with Google Gemini AI";\
-                btn.disabled = false;\
-            \}\
-        \};\
-    </script>\
-</body>\
-</html>}
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Paste suspicious Email, SMS, or Link:</label>
+            <textarea id="userInput" rows="6" 
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all" 
+                placeholder="Example: Urgent! Your account is suspended. Click here to verify..."></textarea>
+            
+            <button onclick="analyzeText()" id="scanBtn" 
+                class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-sm transition-all flex items-center justify-center">
+                Scan with Google Gemini AI
+            </button>
+        </div>
+
+        <div id="resultArea" class="mt-8 hidden p-6 rounded-xl border-2 transition-all">
+            <div class="flex items-center gap-2 mb-2">
+                <span id="riskIcon"></span>
+                <h2 id="riskLevel" class="text-xl font-bold uppercase tracking-wider"></h2>
+            </div>
+            <hr class="my-3 border-gray-200">
+            <p id="explanation" class="text-gray-700 leading-relaxed"></p>
+        </div>
+
+        <p class="text-center text-xs text-gray-500 mt-12 italic">
+            Privacy-First Approach: No data is stored, logged, or shared. Analysis happens in real-time.
+        </p>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+        // ⚠️ PASTE YOUR GOOGLE AI STUDIO API KEY BELOW
+        const API_KEY = "AIzaSyBvyDkawGmY0GSsG2AE4DaY59VSWNEbwvw";
+        const genAI = new GoogleGenerativeAI(API_KEY);
+
+        window.analyzeText = async () => {
+            const input = document.getElementById('userInput').value.trim();
+            const btn = document.getElementById('scanBtn');
+            const resultArea = document.getElementById('resultArea');
+            
+            if (!input) {
+                alert("Please paste a message or link to scan!");
+                return;
+            }
+
+            // UI Loading State
+            btn.innerText = "🤖 Analyzing with AI...";
+            btn.disabled = true;
+            resultArea.classList.add('hidden');
+
+            try {
+                // Using Gemini 1.5 Flash for fast, efficient analysis
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                
+                const prompt = `You are a professional cybersecurity expert at PhishGuard Labs. 
+                Analyze the following content for phishing, scam, or fraud indicators. 
+                Provide a risk level (Low, Medium, or High) and a concise, non-technical explanation.
+
+                Format your response exactly like this:
+                RISK: [Insert Level]
+                EXPLANATION: [Insert 2-3 bullet points of red flags]
+
+                Content to scan: "${input}"`;
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
+
+                // Parsing Logic
+                const isHigh = text.includes("High") || text.includes("HIGH");
+                const isMedium = text.includes("Medium") || text.includes("MEDIUM");
+                
+                let risk = "Low";
+                let style = "bg-green-50 border-green-500 text-green-800";
+                let icon = "✅";
+
+                if (isHigh) {
+                    risk = "High";
+                    style = "bg-red-50 border-red-500 text-red-800";
+                    icon = "🚨";
+                } else if (isMedium) {
+                    risk = "Medium";
+                    style = "bg-yellow-50 border-yellow-600 text-yellow-900";
+                    icon = "⚠️";
+                }
+
+                // Update UI
+                resultArea.className = `mt-8 p-6 rounded-xl border-2 shadow-sm ${style}`;
+                document.getElementById('riskIcon').innerText = icon;
+                document.getElementById('riskLevel').innerText = `Risk Level: ${risk}`;
+                document.getElementById('explanation').innerText = text.split("EXPLANATION:")[1] || text;
+                resultArea.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                alert("Error connecting to Gemini. Please check if your API Key is valid and try again.");
+            } finally {
+                btn.innerText = "Scan with Google Gemini AI";
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
